@@ -1,10 +1,25 @@
-﻿namespace PrimitiveShapeBuilder
+﻿using OpenTK.Windowing.Desktop;
+using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
+
+namespace PrimitiveShapeBuilder
 {
     internal class Program
     {
         internal static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            NativeWindowSettings nativeWindowSettings = new NativeWindowSettings()
+            {
+                Size = new Vector2i(16 * 100, 9 * 100),
+                Title = "Primitive Shape Builder",
+                StartVisible = false,
+                Vsync = VSyncMode.On,
+            };
+
+            using (Window window = new Window(GameWindowSettings.Default, nativeWindowSettings))
+            {
+                window.Run();
+            }
         }
     }
 }
