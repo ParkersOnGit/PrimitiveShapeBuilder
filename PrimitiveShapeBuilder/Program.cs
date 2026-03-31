@@ -6,6 +6,8 @@ namespace PrimitiveShapeBuilder
 {
     internal class Program
     {
+        internal const string VersionNumber = $"v0.0.1-alpha";
+
         internal static void Main(string[] args)
         {
             NativeWindowSettings nativeWindowSettings = new NativeWindowSettings()
