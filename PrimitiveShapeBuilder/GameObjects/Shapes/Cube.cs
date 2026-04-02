@@ -1,6 +1,6 @@
 ﻿using PrimitiveShapeBuilder.GameObjects.Base;
 
-namespace PrimitiveShapeBuilder.GameObjects
+namespace PrimitiveShapeBuilder.GameObjects.Shapes
 {
     internal class Cube : RenderableGameObject
     {
