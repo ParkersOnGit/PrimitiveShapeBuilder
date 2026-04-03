@@ -21,7 +21,6 @@ namespace PrimitiveShapeBuilder.GameObjects
         public Camera(Vector3? position = null)
         {
             Position = position ?? (0.0f, 0.0f, 0.0f);
-            rotation = (0.0f, 0.0f, 0.0f);
         }
 
         public void Update()

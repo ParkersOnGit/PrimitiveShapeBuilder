@@ -11,4 +11,9 @@
     <PackageReference Include="OpenTK" Version="4.9.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Assets\Models\" />
+    <Folder Include="Assets\Shaders\" />
+  </ItemGroup>
+
 </Project>
