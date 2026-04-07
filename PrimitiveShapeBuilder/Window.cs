@@ -16,15 +16,16 @@ namespace PrimitiveShapeBuilder
         internal static Camera Camera = new Camera();
 
         // new cube object (remove later)
-        //private Cube cube = new Cube();
+        private Cube cube = new Cube();
 
         protected override void OnLoad()
         {
             base.OnLoad();
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            GL.ClearColor(0.0f, 0.0f, 0.2f, 1.0f);
+            GL.Enable(EnableCap.DepthTest);
             UpdateView();
 
-            //cube.Initialize();
+            cube.Initialize();
 
 
             // make the window visible after loading everything
@@ -34,9 +35,10 @@ namespace PrimitiveShapeBuilder
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            Camera.Update();
 
-            //cube.Render();
+            cube.Render();
 
             SwapBuffers();
         }
@@ -58,14 +60,11 @@ namespace PrimitiveShapeBuilder
             if (KB.IsKeyDown(Keys.W))
                 Camera.Position += new Vector3(0.0f, 0.0f, -1.0f) * (float)DT;
             if (KB.IsKeyDown(Keys.A))
-                Camera.Position += new Vector3(0.0f, -1.0f, 0.0f) * (float)DT;
+                Camera.Position += new Vector3(-1.0f, 0.0f, 0.0f) * (float)DT;
             if (KB.IsKeyDown(Keys.S))
                 Camera.Position += new Vector3(0.0f, 0.0f, 1.0f) * (float)DT;
             if (KB.IsKeyDown(Keys.D))
-                Camera.Position += new Vector3(0.0f, 1.0f, 0.0f) * (float)DT;
-
-            Title = $"Primitive Shape Builder {Program.VersionNumber} - Camera Position: {Camera.Position}";
-
+                Camera.Position += new Vector3(1.0f, 0.0f, 0.0f) * (float)DT;
         }
 
         protected override void OnFramebufferResize(FramebufferResizeEventArgs e)

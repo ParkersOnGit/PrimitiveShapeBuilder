@@ -1,6 +1,7 @@
 ﻿using OpenTK.Windowing.Desktop;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
+using PrimitiveShapeBuilder.Loaders;
 
 namespace PrimitiveShapeBuilder
 {
@@ -17,6 +18,20 @@ namespace PrimitiveShapeBuilder
                 StartVisible = false,
                 Vsync = VSyncMode.On,
             };
+
+            Model testM = new Model();
+            testM.LoadModel("../../../Assets/Models/Cube.obj");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            foreach (float f in testM.Data)
+            {
+                Console.WriteLine(f);
+            }
+            Console.ForegroundColor = ConsoleColor.Red;
+            foreach (uint i in testM.Indices)
+            {
+                Console.WriteLine(i);
+            }
 
             using (Window window = new Window(GameWindowSettings.Default, nativeWindowSettings))
             {

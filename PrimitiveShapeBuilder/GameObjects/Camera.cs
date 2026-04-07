@@ -28,13 +28,13 @@ namespace PrimitiveShapeBuilder.GameObjects
             // reset the view matrix
             View = Matrix4.Identity;
 
-            // transpose
-            View *= Matrix4.CreateTranslation(Position);
-
             // rotate (yaw, pitch, then roll)
-            View *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(Rotation.Y)) *
-                Matrix4.CreateRotationX(MathHelper.DegreesToRadians(Rotation.X)) *
-                Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(Rotation.Z));
+            View *= Matrix4.CreateRotationY(MathHelper.DegreesToRadians(-Rotation.Y)) *
+                Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-Rotation.X)) *
+                Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(-Rotation.Z));
+
+            // transpose
+            View *= Matrix4.CreateTranslation(-Position);
         }
     }
 }
