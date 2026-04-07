@@ -23,11 +23,14 @@ namespace PrimitiveShapeBuilder
         protected override void OnLoad()
         {
             base.OnLoad();
-            GL.ClearColor(0.0f, 0.0f, 0.2f, 1.0f);
+            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             UpdateView();
 
             gridPlane.Initialize();
+            gridPlane.Scale = new Vector3(10.0f, 0.0f, 10.0f);
 
             CursorState = CursorState.Grabbed;// make option later
 
@@ -44,10 +47,11 @@ namespace PrimitiveShapeBuilder
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             Camera.Update();
 
+            cube.Render();
+
+            gridPlane.shader.SetVector3("cameraPosition", Camera.Position);
             gridPlane.Position = new Vector3(Camera.Position.X, 0.0f, Camera.Position.Z);
             gridPlane.Render();
-
-            cube.Render();
 
             SwapBuffers();
         }
