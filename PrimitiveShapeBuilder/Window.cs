@@ -15,6 +15,8 @@ namespace PrimitiveShapeBuilder
         internal static Matrix4 Projection { get; private set; }
         internal static Camera Camera = new Camera();
 
+        private Plane gridPlane = new Plane(); // grid plane (do not remove)
+
         // new cube object (remove later)
         private Cube cube = new Cube();
 
@@ -24,6 +26,10 @@ namespace PrimitiveShapeBuilder
             GL.ClearColor(0.0f, 0.0f, 0.2f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
             UpdateView();
+
+            gridPlane.Initialize();
+
+            CursorState = CursorState.Grabbed;// make option later
 
             cube.Initialize();
 
@@ -38,6 +44,9 @@ namespace PrimitiveShapeBuilder
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             Camera.Update();
 
+            gridPlane.Position = new Vector3(Camera.Position.X, 0.0f, Camera.Position.Z);
+            gridPlane.Render();
+
             cube.Render();
 
             SwapBuffers();
@@ -49,7 +58,7 @@ namespace PrimitiveShapeBuilder
 
             double DT = e.Time; // delta time
             KeyboardState KB = KeyboardState;
-
+            MouseState MS = MouseState;
 
 
 
@@ -57,14 +66,31 @@ namespace PrimitiveShapeBuilder
             if (KB.IsKeyDown(Keys.Escape))
                 Close();
 
+
+
+
+
+
+
+            // camera position
+            float xVector = (float)MathHelper.Sin(MathHelper.DegreesToRadians(Camera.Rotation.Y)) * 5;
+            float zVector = (float)MathHelper.Cos(MathHelper.DegreesToRadians(Camera.Rotation.Y)) * 5;
+
             if (KB.IsKeyDown(Keys.W))
-                Camera.Position += new Vector3(0.0f, 0.0f, -1.0f) * (float)DT;
+                Camera.Position += new Vector3(-xVector, 0.0f, -zVector) * (float)DT;
             if (KB.IsKeyDown(Keys.A))
-                Camera.Position += new Vector3(-1.0f, 0.0f, 0.0f) * (float)DT;
+                Camera.Position += new Vector3(-zVector, 0.0f, xVector) * (float)DT;
             if (KB.IsKeyDown(Keys.S))
-                Camera.Position += new Vector3(0.0f, 0.0f, 1.0f) * (float)DT;
+                Camera.Position += new Vector3(xVector, 0.0f, zVector) * (float)DT;
             if (KB.IsKeyDown(Keys.D))
-                Camera.Position += new Vector3(1.0f, 0.0f, 0.0f) * (float)DT;
+                Camera.Position += new Vector3(zVector, 0.0f, -xVector) * (float)DT;
+            if (KB.IsKeyDown(Keys.Space))
+                Camera.Position += new Vector3(0.0f, 5.0f, 0.0f) * (float)DT;
+            if (KB.IsKeyDown(Keys.LeftShift))
+                Camera.Position += new Vector3(0.0f, -5.0f, 0.0f) * (float)DT;
+
+            // camera rotation
+            Camera.Rotation += new Vector3(-MS.Delta.Y, -MS.Delta.X, 0.0f) * 0.1f;
         }
 
         protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
