@@ -7,7 +7,7 @@ namespace PrimitiveShapeBuilder.GameObjects.Shapes
         internal Cube()
         {
             modelPath = "../../../Assets/Models/Cube.obj";
-            vertexShaderPath = "../../../Assets/Shaders/FlatStyle.vert";
+            vertexShaderPath = "../../../Assets/Shaders/Default.vert";
             fragmentShaderPath = "../../../Assets/Shaders/FlatStyle.frag";
         }
     }

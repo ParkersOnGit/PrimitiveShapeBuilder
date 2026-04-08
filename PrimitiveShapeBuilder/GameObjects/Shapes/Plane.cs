@@ -7,7 +7,7 @@ namespace PrimitiveShapeBuilder.GameObjects.Shapes
         internal Plane()
         {
             modelPath = "../../../Assets/Models/Plane.obj";
-            vertexShaderPath = "../../../Assets/Shaders/Grid.vert";
+            vertexShaderPath = "../../../Assets/Shaders/Default.vert";
             fragmentShaderPath = "../../../Assets/Shaders/Grid.frag";
         }
     }
