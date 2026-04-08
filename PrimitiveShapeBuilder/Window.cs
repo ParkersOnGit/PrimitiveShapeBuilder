@@ -14,10 +14,10 @@ namespace PrimitiveShapeBuilder
         internal Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) { }
 
         internal static Matrix4 Projection { get; private set; }
-        internal static Camera Camera = new Camera();
+        internal static Camera Camera = new Camera((0, 2, 0));
 
-        private bool F11Pressed, RightClickPressed = false;
-        private Stopwatch rightClickStopwatch = new Stopwatch();
+        private bool F1Pressed, F11Pressed, TabPressed, RightClickPressed = false; // key switch bools
+        private bool ShowGrid = true;
 
         private Plane gridPlane = new Plane(); // grid plane (do not remove)
 
@@ -54,10 +54,12 @@ namespace PrimitiveShapeBuilder
 
 
 
-
-            gridPlane.shader.SetVector3("cameraPosition", Camera.Position);
-            gridPlane.Position = new Vector3(Camera.Position.X, 0.0f, Camera.Position.Z);
-            gridPlane.Render();
+            if (ShowGrid)
+            {
+                gridPlane.shader.SetVector3("cameraPosition", Camera.Position);
+                gridPlane.Position = new Vector3(Camera.Position.X, 0.0f, Camera.Position.Z);
+                gridPlane.Render();
+            }
 
             SwapBuffers();
         }
@@ -82,9 +84,23 @@ namespace PrimitiveShapeBuilder
                 WindowState = WindowState == WindowState.Fullscreen ? WindowState.Normal : WindowState.Fullscreen;
                 F11Pressed = true;
             }
-            else if (KB.IsKeyReleased(Keys.F11) && F11Pressed)
-                F11Pressed = false;
+            else if (KB.IsKeyReleased(Keys.F11) && F11Pressed) F11Pressed = false;
 
+            // toggle cursor state
+            if (KB.IsKeyDown(Keys.Tab) && !TabPressed)
+            {
+                CursorState = CursorState == CursorState.Grabbed ? CursorState.Normal : CursorState.Grabbed;
+                TabPressed = true;
+            }
+            else if (KB.IsKeyReleased(Keys.Tab) && TabPressed) TabPressed = false;
+
+            // toggle UI
+            if (KB.IsKeyDown(Keys.F1) && !F1Pressed)
+            {
+                ShowGrid = !ShowGrid;
+                F1Pressed = true;
+            }
+            else if (KB.IsKeyReleased(Keys.F1) && F1Pressed) F1Pressed = false;
 
 
             // create object view object placement
@@ -101,8 +117,7 @@ namespace PrimitiveShapeBuilder
                 cubes.Add(newCube);
                 RightClickPressed = true;
             }
-            else if (MS.IsButtonReleased(MouseButton.Right) && RightClickPressed)
-                RightClickPressed = false;
+            else if (MS.IsButtonReleased(MouseButton.Right) && RightClickPressed) RightClickPressed = false;
 
 
 
@@ -125,7 +140,8 @@ namespace PrimitiveShapeBuilder
                 Camera.Position += new Vector3(0.0f, -1.0f, 0.0f) * (float)DT * speed;
 
             // camera rotation
-            Camera.Rotation += new Vector3(-MS.Delta.Y, -MS.Delta.X, 0.0f) * 0.1f;
+            if (CursorState == CursorState.Grabbed)
+                Camera.Rotation += new Vector3(-MS.Delta.Y, -MS.Delta.X, 0.0f) * 0.1f;
         }
 
         protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
