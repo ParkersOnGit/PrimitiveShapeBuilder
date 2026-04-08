@@ -5,6 +5,7 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using PrimitiveShapeBuilder.GameObjects;
 using PrimitiveShapeBuilder.GameObjects.Shapes;
+using System.Diagnostics;
 
 namespace PrimitiveShapeBuilder
 {
@@ -15,10 +16,13 @@ namespace PrimitiveShapeBuilder
         internal static Matrix4 Projection { get; private set; }
         internal static Camera Camera = new Camera();
 
+        private bool F11Pressed, RightClickPressed = false;
+        private Stopwatch rightClickStopwatch = new Stopwatch();
+
         private Plane gridPlane = new Plane(); // grid plane (do not remove)
 
-        // new cube object (remove later)
-        private Cube cube = new Cube();
+        // eventually replace with list of all shapes not just cubes
+        private List<Cube> cubes = new List<Cube>();
 
         protected override void OnLoad()
         {
@@ -34,9 +38,6 @@ namespace PrimitiveShapeBuilder
 
             CursorState = CursorState.Grabbed;// make option later
 
-            cube.Initialize();
-
-
             // make the window visible after loading everything
             IsVisible = true;
         }
@@ -47,7 +48,12 @@ namespace PrimitiveShapeBuilder
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             Camera.Update();
 
-            cube.Render();
+
+            foreach (Cube cube in cubes)
+                cube.Render();
+
+
+
 
             gridPlane.shader.SetVector3("cameraPosition", Camera.Position);
             gridPlane.Position = new Vector3(Camera.Position.X, 0.0f, Camera.Position.Z);
@@ -66,32 +72,57 @@ namespace PrimitiveShapeBuilder
 
 
 
-            // close the program (remove later maybe)
+            // close the program
             if (KB.IsKeyDown(Keys.Escape))
                 Close();
 
+            // full screen toggle
+            if (KB.IsKeyDown(Keys.F11) && !F11Pressed)
+            {
+                WindowState = WindowState == WindowState.Fullscreen ? WindowState.Normal : WindowState.Fullscreen;
+                F11Pressed = true;
+            }
+            else if (KB.IsKeyReleased(Keys.F11) && F11Pressed)
+                F11Pressed = false;
 
+
+
+            // create object view object placement
+            if (MS.IsButtonDown(MouseButton.Right) && !RightClickPressed)
+            {
+                Cube newCube = new Cube();
+                Vector3 forwardVector = new Vector3(
+                    (float)(Math.Cos(MathHelper.DegreesToRadians(Camera.Rotation.X)) * -Math.Sin(MathHelper.DegreesToRadians(Camera.Rotation.Y))),
+                    (float)Math.Sin(MathHelper.DegreesToRadians(Camera.Rotation.X)),
+                    (float)(Math.Cos(MathHelper.DegreesToRadians(Camera.Rotation.X)) * -Math.Cos(MathHelper.DegreesToRadians(Camera.Rotation.Y)))
+                );
+                newCube.Position = Camera.Position + forwardVector * 5;
+                newCube.Initialize();
+                cubes.Add(newCube);
+                RightClickPressed = true;
+            }
+            else if (MS.IsButtonReleased(MouseButton.Right) && RightClickPressed)
+                RightClickPressed = false;
 
 
 
 
 
             // camera position
-            float xVector = (float)MathHelper.Sin(MathHelper.DegreesToRadians(Camera.Rotation.Y)) * 5;
-            float zVector = (float)MathHelper.Cos(MathHelper.DegreesToRadians(Camera.Rotation.Y)) * 5;
+            float speed = 5.0f;
 
             if (KB.IsKeyDown(Keys.W))
-                Camera.Position += new Vector3(-xVector, 0.0f, -zVector) * (float)DT;
+                Camera.Position += new Vector3(-(float)MathHelper.Sin(MathHelper.DegreesToRadians(Camera.Rotation.Y)), 0.0f, -(float)MathHelper.Cos(MathHelper.DegreesToRadians(Camera.Rotation.Y))) * (float)DT * speed;
             if (KB.IsKeyDown(Keys.A))
-                Camera.Position += new Vector3(-zVector, 0.0f, xVector) * (float)DT;
+                Camera.Position += new Vector3(-(float)MathHelper.Cos(MathHelper.DegreesToRadians(Camera.Rotation.Y)), 0.0f, (float)MathHelper.Sin(MathHelper.DegreesToRadians(Camera.Rotation.Y))) * (float)DT * speed;
             if (KB.IsKeyDown(Keys.S))
-                Camera.Position += new Vector3(xVector, 0.0f, zVector) * (float)DT;
+                Camera.Position += new Vector3((float)MathHelper.Sin(MathHelper.DegreesToRadians(Camera.Rotation.Y)), 0.0f, (float)MathHelper.Cos(MathHelper.DegreesToRadians(Camera.Rotation.Y))) * (float)DT * speed;
             if (KB.IsKeyDown(Keys.D))
-                Camera.Position += new Vector3(zVector, 0.0f, -xVector) * (float)DT;
+                Camera.Position += new Vector3((float)MathHelper.Cos(MathHelper.DegreesToRadians(Camera.Rotation.Y)), 0.0f, -(float)MathHelper.Sin(MathHelper.DegreesToRadians(Camera.Rotation.Y))) * (float)DT * speed;
             if (KB.IsKeyDown(Keys.Space))
-                Camera.Position += new Vector3(0.0f, 5.0f, 0.0f) * (float)DT;
+                Camera.Position += new Vector3(0.0f, 1.0f, 0.0f) * (float)DT * speed;
             if (KB.IsKeyDown(Keys.LeftShift))
-                Camera.Position += new Vector3(0.0f, -5.0f, 0.0f) * (float)DT;
+                Camera.Position += new Vector3(0.0f, -1.0f, 0.0f) * (float)DT * speed;
 
             // camera rotation
             Camera.Rotation += new Vector3(-MS.Delta.Y, -MS.Delta.X, 0.0f) * 0.1f;

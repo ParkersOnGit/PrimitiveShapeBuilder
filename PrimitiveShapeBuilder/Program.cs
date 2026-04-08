@@ -7,7 +7,7 @@ namespace PrimitiveShapeBuilder
 {
     internal class Program
     {
-        internal const string VersionNumber = $"v0.0.1-alpha";
+        internal const string VersionNumber = $"v0.1.0-alpha";
 
         internal static void Main(string[] args)
         {
