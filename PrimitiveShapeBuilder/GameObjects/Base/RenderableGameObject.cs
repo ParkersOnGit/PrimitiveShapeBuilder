@@ -61,15 +61,15 @@ namespace PrimitiveShapeBuilder.GameObjects.Base
             shader.Use();
         }
 
-        internal void Render()
+        internal void Render(Matrix4 viewMatrix, Matrix4 projectionMatrix)
         {
             Update();
 
             GL.BindVertexArray(vertexArrayObject);
 
             shader.SetMatrix4("model", modelMatrix);
-            shader.SetMatrix4("view", Window.Camera.View);
-            shader.SetMatrix4("projection", Window.Projection);
+            shader.SetMatrix4("view", viewMatrix);
+            shader.SetMatrix4("projection", projectionMatrix);
             shader.Use();
 
             GL.DrawElements(PrimitiveType.Triangles, model.Indices.Length, DrawElementsType.UnsignedInt, 0);

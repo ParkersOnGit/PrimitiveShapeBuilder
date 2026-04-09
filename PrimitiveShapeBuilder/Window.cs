@@ -4,8 +4,8 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using PrimitiveShapeBuilder.GameObjects;
+using PrimitiveShapeBuilder.GameObjects.Base;
 using PrimitiveShapeBuilder.GameObjects.Shapes;
-using System.Diagnostics;
 
 namespace PrimitiveShapeBuilder
 {
@@ -15,11 +15,15 @@ namespace PrimitiveShapeBuilder
 
         internal static Matrix4 Projection { get; private set; }
         internal static Camera Camera = new Camera((0, 2, 0));
+        private static Camera UICamera = new Camera((0, 0, 3));
 
         private bool F1Pressed, F11Pressed, TabPressed, RightClickPressed = false; // key switch bools
-        private bool ShowGrid = true;
+        private bool ShowUI = true;
 
         private Plane gridPlane = new Plane(); // grid plane (do not remove)
+        private RenderableGameObject UIObject = new Cube();
+
+        private List<RenderableGameObject> shapes = new List<RenderableGameObject>();
 
         // eventually replace with list of all shapes not just cubes
         private List<Cube> cubes = new List<Cube>();
@@ -36,8 +40,15 @@ namespace PrimitiveShapeBuilder
             gridPlane.Initialize();
             gridPlane.Scale = new Vector3(10.0f, 0.0f, 10.0f);
 
-            CursorState = CursorState.Grabbed;// make option later
+            UIObject.Initialize();
+            UIObject.Rotation = new Vector3(0.0f, 45.0f, 0.0f);
+            UIObject.Scale = new Vector3(0.2f);
+            UIObject.Position = new Vector3(-2.0f, 0.0f, 0.0f);
 
+            UICamera.Update();
+
+
+            CursorState = CursorState.Grabbed;
             // make the window visible after loading everything
             IsVisible = true;
         }
@@ -50,15 +61,19 @@ namespace PrimitiveShapeBuilder
 
 
             foreach (Cube cube in cubes)
-                cube.Render();
-
-
-
-            if (ShowGrid)
             {
+                cube.shader.SetVector3("lightPos", Camera.Position);
+                cube.shader.SetVector3("objectColor", new Vector3(0.5f, 0.5f, 1.0f));
+                cube.Render(Camera.View, Projection);
+            }
+
+            if (ShowUI)
+            {
+                //UIObject.Render(UICamera.View, Projection);
+
                 gridPlane.shader.SetVector3("cameraPosition", Camera.Position);
                 gridPlane.Position = new Vector3(Camera.Position.X, 0.0f, Camera.Position.Z);
-                gridPlane.Render();
+                gridPlane.Render(Camera.View, Projection);
             }
 
             SwapBuffers();
@@ -97,7 +112,7 @@ namespace PrimitiveShapeBuilder
             // toggle UI
             if (KB.IsKeyDown(Keys.F1) && !F1Pressed)
             {
-                ShowGrid = !ShowGrid;
+                ShowUI = !ShowUI;
                 F1Pressed = true;
             }
             else if (KB.IsKeyReleased(Keys.F1) && F1Pressed) F1Pressed = false;

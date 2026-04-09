@@ -1,7 +1,6 @@
 ﻿using OpenTK.Windowing.Desktop;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
-using PrimitiveShapeBuilder.Loaders;
 
 namespace PrimitiveShapeBuilder
 {

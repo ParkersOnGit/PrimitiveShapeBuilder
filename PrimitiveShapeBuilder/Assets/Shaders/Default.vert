@@ -9,9 +9,13 @@ uniform mat4 view;
 uniform mat4 projection;
 
 out vec2 UV;
+out vec3 Normal;
+out vec3 FragPos;
 
 void main()
 {
 	gl_Position = vec4(aPos, 1.0) * model * view * projection;
 	UV = aTexCoords;
+	Normal = aNorm;
+	FragPos = vec3(vec4(aPos, 1.0) * model);
 }
