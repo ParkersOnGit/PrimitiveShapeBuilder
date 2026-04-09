@@ -6,7 +6,6 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using PrimitiveShapeBuilder.GameObjects;
 using PrimitiveShapeBuilder.GameObjects.Base;
 using PrimitiveShapeBuilder.GameObjects.Shapes;
-using static PrimitiveShapeBuilder.Enums;
 
 namespace PrimitiveShapeBuilder
 {
@@ -25,9 +24,6 @@ namespace PrimitiveShapeBuilder
         private RenderableGameObject UIObject = new Cube();
 
         private List<RenderableGameObject> shapes = new List<RenderableGameObject>();
-
-        // eventually replace with list of all shapes not just cubes
-        private List<Cube> cubes = new List<Cube>();
 
         protected override void OnLoad()
         {
@@ -61,12 +57,7 @@ namespace PrimitiveShapeBuilder
             Camera.Update();
 
 
-            foreach (Cube cube in cubes)
-            {
-                cube.shader.SetVector3("lightPos", Camera.Position);
-                cube.shader.SetVector3("objectColor", new Vector3(0.5f, 0.5f, 1.0f));
-                cube.Render(Camera.View, Projection);
-            }
+            RenderAllObjects(shapes);
 
             if (ShowUI)
             {
@@ -87,7 +78,6 @@ namespace PrimitiveShapeBuilder
             double DT = e.Time; // delta time
             KeyboardState KB = KeyboardState;
             MouseState MS = MouseState;
-
 
 
             // close the program
@@ -130,7 +120,7 @@ namespace PrimitiveShapeBuilder
                 );
                 newCube.Position = Camera.Position + forwardVector * 5;
                 newCube.Initialize();
-                cubes.Add(newCube);
+                shapes.Add(newCube);
                 RightClickPressed = true;
             }
             else if (MS.IsButtonReleased(MouseButton.Right) && RightClickPressed) RightClickPressed = false;
@@ -172,9 +162,16 @@ namespace PrimitiveShapeBuilder
             Projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90), ClientSize.X / (float)ClientSize.Y, 0.001f, 100.0f);
         }
 
-        private void CreateShape(ShapeType shape, ColorType color)
+        // needed because apcsp requires a method with specific stuff
+        private void RenderAllObjects(List<RenderableGameObject> shapesList)
         {
-            
+            foreach (RenderableGameObject shape in shapesList)
+            {
+                if (shape == null) continue;
+                shape.shader.SetVector3("lightPos", Camera.Position);
+                shape.shader.SetVector3("objectColor", new Vector3(0.5f, 0.5f, 1.0f));
+                shape.Render(Camera.View, Projection);
+            }
         }
     }
 }
