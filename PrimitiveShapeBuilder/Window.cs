@@ -6,6 +6,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using PrimitiveShapeBuilder.GameObjects;
 using PrimitiveShapeBuilder.GameObjects.Base;
 using PrimitiveShapeBuilder.GameObjects.Shapes;
+using static PrimitiveShapeBuilder.Enums;
 
 namespace PrimitiveShapeBuilder
 {
@@ -169,6 +170,11 @@ namespace PrimitiveShapeBuilder
         {
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
             Projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90), ClientSize.X / (float)ClientSize.Y, 0.001f, 100.0f);
+        }
+
+        private void CreateShape(ShapeType shape, ColorType color)
+        {
+            
         }
     }
 }
