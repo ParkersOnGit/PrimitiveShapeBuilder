@@ -16,6 +16,8 @@
 >
 > ### Building:
 > - **Right Click**: place shape
+> - **Scroll**: change shape
+> - **Scroll + Ctrl**: change color
 >
 > ### User Interface:
 > - **Escape**: quit program
