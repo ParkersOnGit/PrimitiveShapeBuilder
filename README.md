@@ -28,10 +28,22 @@
 > ## Objects and Colors
 >
 > ### Objects:
-> - **Cube**: six sides, eight vertices forming a box shape.
-> - **Square Pyramid**: a pyramidal shape with 4 sides at the bottom. *(WIP)*
+> - **Cube**,
+> - **Sphere**,
+> - **Square Pyramid**,
+> - **Cone**,
+> - **Cylinder**,
+> - **Triangular Prism**
 >
 > ### Colors:
-> - **White**: pure color.
+> - **Red**,
+> - **Orange**,
+> - **Yellow**,
+> - **Green**,
+> - **Blue**,
+> - **Purple**,
+> - **White**,
+> - **Gray**,
+> - **Black**
 >
 >  *More objects and colors will be added in later updates.*
