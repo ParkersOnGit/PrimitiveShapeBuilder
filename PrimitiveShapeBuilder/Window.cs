@@ -116,10 +116,16 @@ namespace PrimitiveShapeBuilder
             // create object view object placement
             if (MS.IsButtonDown(MouseButton.Right) && !RightClickPressed)
             {
-                CreateShape(currentShapeType, currentColorType);
                 RightClickPressed = true;
             }
-            else if (MS.IsButtonReleased(MouseButton.Right) && RightClickPressed) RightClickPressed = false;
+            else if (MS.IsButtonReleased(MouseButton.Right) && RightClickPressed)
+            {
+                CreateShape(currentShapeType, currentColorType);
+                RightClickPressed = false;
+            }
+
+
+
 
             // shape type switching
             if (KB.IsKeyDown(Keys.LeftControl) || KB.IsKeyDown(Keys.RightControl))

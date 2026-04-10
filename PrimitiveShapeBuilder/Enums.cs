@@ -9,7 +9,11 @@ namespace PrimitiveShapeBuilder
         internal enum ShapeType
         {
             Cube,
+            Sphere,
             SquarePyramid,
+            Cone,
+            Cylinder,
+            TriangularPrism
         }
 
         internal static RenderableGameObject ToShapeObject(this ShapeType shape)
@@ -17,7 +21,11 @@ namespace PrimitiveShapeBuilder
             switch (shape)
             {
                 case ShapeType.Cube: return new Cube();
+                case ShapeType.Sphere: return new Sphere();
                 case ShapeType.SquarePyramid: return new SquarePyramid();
+                case ShapeType.Cone: return new Cone();
+                case ShapeType.Cylinder: return new Cylinder();
+                case ShapeType.TriangularPrism: return new TriangularPrism();
                 default: return null;
             }
         }
@@ -40,11 +48,11 @@ namespace PrimitiveShapeBuilder
             switch (color)
             {
                 case ColorType.Red: return new Vector3(1.0f, 0.0f, 0.0f);
-                case ColorType.Orange: return new Vector3(0.0f, 0.0f, 0.0f); // TODO: Fix this color
-                case ColorType.Yellow: return new Vector3(1.0f, 0.0f, 0.0f); // TODO: Fix this color
+                case ColorType.Orange: return new Vector3(1.0f, 0.5f, 0.0f);
+                case ColorType.Yellow: return new Vector3(1.0f, 1.0f, 0.0f);
                 case ColorType.Green: return new Vector3(0.0f, 1.0f, 0.0f);
                 case ColorType.Blue: return new Vector3(0.0f, 0.0f, 1.0f); 
-                case ColorType.Purple: return new Vector3(1.0f, 0.0f, 0.0f); // TODO: Fix this color
+                case ColorType.Purple: return new Vector3(0.5f, 0.0f, 0.5f);
                 case ColorType.White: return new Vector3(1.0f, 1.0f, 1.0f); 
                 case ColorType.Gray: return new Vector3(0.5f, 0.5f, 0.5f); 
                 case ColorType.Black: return new Vector3(0.0f, 0.0f, 0.0f); 
