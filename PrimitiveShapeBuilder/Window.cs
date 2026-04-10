@@ -6,6 +6,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using PrimitiveShapeBuilder.GameObjects;
 using PrimitiveShapeBuilder.GameObjects.Base;
 using PrimitiveShapeBuilder.GameObjects.Shapes;
+using static PrimitiveShapeBuilder.Enums;
 
 namespace PrimitiveShapeBuilder
 {
@@ -19,6 +20,9 @@ namespace PrimitiveShapeBuilder
 
         private bool F1Pressed, F11Pressed, TabPressed, RightClickPressed = false; // key switch bools
         private bool ShowUI = true;
+
+        private ShapeType currentShapeType = ShapeType.Cube; // default shape type
+        private ColorType currentColorType = ColorType.White; // default color type
 
         private Plane gridPlane = new Plane(); // grid plane (do not remove)
         private RenderableGameObject UIObject = new Cube();
@@ -57,7 +61,7 @@ namespace PrimitiveShapeBuilder
             Camera.Update();
 
 
-            RenderAllObjects(shapes);
+            RenderAllShapes(shapes);
 
             if (ShowUI)
             {
@@ -112,21 +116,27 @@ namespace PrimitiveShapeBuilder
             // create object view object placement
             if (MS.IsButtonDown(MouseButton.Right) && !RightClickPressed)
             {
-                Cube newCube = new Cube();
-                Vector3 forwardVector = new Vector3(
-                    (float)(Math.Cos(MathHelper.DegreesToRadians(Camera.Rotation.X)) * -Math.Sin(MathHelper.DegreesToRadians(Camera.Rotation.Y))),
-                    (float)Math.Sin(MathHelper.DegreesToRadians(Camera.Rotation.X)),
-                    (float)(Math.Cos(MathHelper.DegreesToRadians(Camera.Rotation.X)) * -Math.Cos(MathHelper.DegreesToRadians(Camera.Rotation.Y)))
-                );
-                newCube.Position = Camera.Position + forwardVector * 5;
-                newCube.Initialize();
-                shapes.Add(newCube);
+                CreateShape(currentShapeType, currentColorType);
                 RightClickPressed = true;
             }
             else if (MS.IsButtonReleased(MouseButton.Right) && RightClickPressed) RightClickPressed = false;
 
-
-
+            // shape type switching
+            if (KB.IsKeyDown(Keys.LeftControl) || KB.IsKeyDown(Keys.RightControl))
+            {
+                if (MS.ScrollDelta.Y < 0)
+                    currentColorType = currentColorType.Increment();
+                else if (MS.ScrollDelta.Y > 0)
+                    currentColorType = currentColorType.Decrement();
+            }
+            else
+            {
+                if (MS.ScrollDelta.Y < 0)
+                    currentShapeType = currentShapeType.Increment();
+                else if (MS.ScrollDelta.Y > 0)
+                    currentShapeType = currentShapeType.Decrement();
+            }
+            Title = currentShapeType.ToString() + "  " + currentColorType.ToString();
 
 
             // camera position
@@ -162,14 +172,30 @@ namespace PrimitiveShapeBuilder
             Projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90), ClientSize.X / (float)ClientSize.Y, 0.001f, 100.0f);
         }
 
+        private void CreateShape(ShapeType shapeType, ColorType colorType)
+        {
+            RenderableGameObject newShape = shapeType.ToShapeObject();
+            Vector3 forwardVector = new Vector3(
+                (float)(Math.Cos(MathHelper.DegreesToRadians(Camera.Rotation.X)) * -Math.Sin(MathHelper.DegreesToRadians(Camera.Rotation.Y))),
+                (float)Math.Sin(MathHelper.DegreesToRadians(Camera.Rotation.X)),
+                (float)(Math.Cos(MathHelper.DegreesToRadians(Camera.Rotation.X)) * -Math.Cos(MathHelper.DegreesToRadians(Camera.Rotation.Y)))
+            );
+            
+            newShape.Position = Camera.Position + forwardVector * 5;
+            newShape.Color = colorType.ToColor();
+
+            newShape.Initialize();
+            shapes.Add(newShape);
+        }
+
         // needed because apcsp requires a method with specific stuff
-        private void RenderAllObjects(List<RenderableGameObject> shapesList)
+        private void RenderAllShapes(List<RenderableGameObject> shapesList)
         {
             foreach (RenderableGameObject shape in shapesList)
             {
                 if (shape == null) continue;
                 shape.shader.SetVector3("lightPos", Camera.Position);
-                shape.shader.SetVector3("objectColor", new Vector3(0.5f, 0.5f, 1.0f));
+                shape.shader.SetVector3("objectColor", shape.Color);
                 shape.Render(Camera.View, Projection);
             }
         }

@@ -18,8 +18,8 @@ namespace PrimitiveShapeBuilder.GameObjects.Base
         protected string modelPath;
         protected Matrix4 modelMatrix;
 
+        internal Vector3 Color;
         
-
         internal void Initialize()
         {
             // initialize the model

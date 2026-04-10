@@ -10,7 +10,6 @@ namespace PrimitiveShapeBuilder
         {
             Cube,
             SquarePyramid,
-            Plane,
         }
 
         internal static RenderableGameObject ToShapeObject(this ShapeType shape)
@@ -18,8 +17,7 @@ namespace PrimitiveShapeBuilder
             switch (shape)
             {
                 case ShapeType.Cube: return new Cube();
-                //case ShapeType.SquarePyramid: return new SquarePyramid();
-                case ShapeType.Plane: return new Plane();
+                case ShapeType.SquarePyramid: return new SquarePyramid();
                 default: return null;
             }
         }
@@ -52,6 +50,16 @@ namespace PrimitiveShapeBuilder
                 case ColorType.Black: return new Vector3(0.0f, 0.0f, 0.0f); 
                 default: return new Vector3(1.0f); 
             }
+        }
+
+        // still dont really understand the whole generic T value and all that but it works!
+        internal static T Increment<T>(this T enumType) where T : Enum
+        {
+            return (T)Enum.ToObject(typeof(T), (Convert.ToInt32(enumType) + 1) % Enum.GetValues(typeof(T)).Length);
+        }
+        internal static T Decrement<T>(this T enumType) where T : Enum
+        {
+            return (T)Enum.ToObject(typeof(T), (Convert.ToInt32(enumType) - 1 + Enum.GetValues(typeof(T)).Length) % Enum.GetValues(typeof(T)).Length);
         }
     }
 }
