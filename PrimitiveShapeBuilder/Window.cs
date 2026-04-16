@@ -16,7 +16,6 @@ namespace PrimitiveShapeBuilder
 
         internal static Matrix4 Projection { get; private set; }
         internal static Camera Camera = new Camera((0, 2, 0));
-        private static Camera UICamera = new Camera((0, 0, 3));
 
         private bool F1Pressed, F11Pressed, TabPressed, RightClickPressed = false; // key switch bools
         private bool ShowUI = true;
@@ -41,13 +40,11 @@ namespace PrimitiveShapeBuilder
             gridPlane.Initialize();
             gridPlane.Scale = new Vector3(10.0f, 0.0f, 10.0f);
 
-            UIObject.Initialize();
             UIObject.Rotation = new Vector3(0.0f, 45.0f, 0.0f);
-            UIObject.Scale = new Vector3(0.2f);
-            UIObject.Position = new Vector3(-2.0f, 0.0f, 0.0f);
-
-            UICamera.Update();
-
+            UIObject.Position = new Vector3(100f, ClientSize.Y - 100f, 0f);
+            UIObject.Scale = new Vector3(50.0f);
+            UIObject.Color = new Vector3((float)new Random().NextDouble(), (float)new Random().NextDouble(), (float)new Random().NextDouble());
+            UIObject.Initialize();
 
             CursorState = CursorState.Grabbed;
             // make the window visible after loading everything
@@ -61,15 +58,29 @@ namespace PrimitiveShapeBuilder
             Camera.Update();
 
 
+
             RenderAllShapes(shapes);
 
             if (ShowUI)
             {
-                //UIObject.Render(UICamera.View, Projection);
-
                 gridPlane.shader.SetVector3("cameraPosition", Camera.Position);
                 gridPlane.Position = new Vector3(Camera.Position.X, 0.0f, Camera.Position.Z);
                 gridPlane.Render(Camera.View, Projection);
+
+                UIObject.Rotation += new Vector3(0, 25 * (float)e.Time, 0); // rotate the UI object (DEUBG)
+
+
+                Matrix4 uiProjection = Matrix4.CreateOrthographicOffCenter(
+                    0, ClientSize.X,
+                    ClientSize.Y, 0,
+                    -100f, 100f
+                );
+
+
+                GL.Clear(ClearBufferMask.DepthBufferBit);
+                UIObject.shader.SetVector3("lightPos", new Vector3(0f, 0f, 100f));
+                UIObject.shader.SetVector3("objectColor", UIObject.Color);
+                UIObject.Render(Matrix4.Identity, uiProjection);
             }
 
             SwapBuffers();

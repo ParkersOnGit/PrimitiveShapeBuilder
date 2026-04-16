@@ -16,7 +16,7 @@ void main()
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diffuse = dot(norm, lightDir);
 
-	float lightDist = max(distance(lightPos, FragPos) / 5.0, 1.0);
+	float lightDist = max(distance(lightPos, FragPos) / 15.0, 1.0);
 
 	FragColor = vec4((ambientStrength + diffuse) / lightDist * objectColor, 1.0);
 }
