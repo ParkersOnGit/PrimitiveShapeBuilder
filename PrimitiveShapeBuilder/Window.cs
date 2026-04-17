@@ -43,7 +43,6 @@ namespace PrimitiveShapeBuilder
             UIObject.Rotation = new Vector3(0.0f, 45.0f, 0.0f);
             UIObject.Position = new Vector3(100f, ClientSize.Y - 100f, 0f);
             UIObject.Scale = new Vector3(50.0f);
-            UIObject.Color = new Vector3((float)new Random().NextDouble(), (float)new Random().NextDouble(), (float)new Random().NextDouble());
             UIObject.Initialize();
 
             CursorState = CursorState.Grabbed;
@@ -79,7 +78,7 @@ namespace PrimitiveShapeBuilder
 
                 GL.Clear(ClearBufferMask.DepthBufferBit);
                 UIObject.shader.SetVector3("lightPos", new Vector3(0f, 0f, 100f));
-                UIObject.shader.SetVector3("objectColor", UIObject.Color);
+                UIObject.shader.SetVector3("objectColor", currentColorType.ToColor());
                 UIObject.Render(Matrix4.Identity, uiProjection);
             }
 
@@ -153,7 +152,7 @@ namespace PrimitiveShapeBuilder
                 else if (MS.ScrollDelta.Y > 0)
                     currentShapeType = currentShapeType.Decrement();
             }
-            Title = currentShapeType.ToString() + "  " + currentColorType.ToString();
+            //Title = currentShapeType.ToString() + "  " + currentColorType.ToString();
 
 
             // camera position
