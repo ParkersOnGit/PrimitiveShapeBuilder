@@ -17,13 +17,13 @@ namespace PrimitiveShapeBuilder
         internal static Matrix4 Projection { get; private set; }
         internal static Camera Camera = new Camera((0, 2, 0));
 
-        private bool F1Pressed, F11Pressed, TabPressed, RightClickPressed = false; // key switch bools
+        private bool F1Pressed, F11Pressed, TabPressed, RightClickPressed = false;
         private bool ShowUI = true;
 
-        private ShapeType currentShapeType = ShapeType.Cube; // default shape type
-        private ColorType currentColorType = ColorType.White; // default color type
+        private ShapeType currentShapeType = ShapeType.Cube;
+        private ColorType currentColorType = ColorType.White;
 
-        private Plane gridPlane = new Plane(); // grid plane (do not remove)
+        private Plane gridPlane = new Plane();
         private RenderableGameObject UIObject = new Cube();
 
         private List<RenderableGameObject> shapes = new List<RenderableGameObject>();
@@ -46,8 +46,17 @@ namespace PrimitiveShapeBuilder
             UIObject.Initialize();
 
             CursorState = CursorState.Grabbed;
-            // make the window visible after loading everything
             IsVisible = true;
+
+            // yes i know in the commit message it says got rid of all comments but i plan on adding this to the scene manager later
+            //for (int y = 0; y <= (int)Enum.GetValues(typeof(ShapeType)).Cast<ShapeType>().Max(); y++)
+            //{
+            //    for (int x = 0; x <= (int)Enum.GetValues(typeof(ColorType)).Cast<ColorType>().Max(); x++)
+            //    {
+            //        Camera.Position = new Vector3(x * 5, 2, y * 5);
+            //        CreateShape((ShapeType)y, (ColorType)x);
+            //    }
+            //}
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -55,8 +64,6 @@ namespace PrimitiveShapeBuilder
             base.OnRenderFrame(e);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             Camera.Update();
-
-
 
             RenderAllShapes(shapes);
 
@@ -66,9 +73,9 @@ namespace PrimitiveShapeBuilder
                 gridPlane.Position = new Vector3(Camera.Position.X, 0.0f, Camera.Position.Z);
                 gridPlane.Render(Camera.View, Projection);
 
-                UIObject.Rotation += new Vector3(0, 25 * (float)e.Time, 0); // rotate the UI object (DEUBG)
 
 
+                UIObject.Rotation += new Vector3(0, 25 * (float)e.Time, 0);
                 Matrix4 uiProjection = Matrix4.CreateOrthographicOffCenter(
                     0, ClientSize.X,
                     ClientSize.Y, 0,
@@ -89,16 +96,13 @@ namespace PrimitiveShapeBuilder
         {
             base.OnUpdateFrame(e);
 
-            double DT = e.Time; // delta time
+            double DT = e.Time;
             KeyboardState KB = KeyboardState;
             MouseState MS = MouseState;
 
-
-            // close the program
             if (KB.IsKeyDown(Keys.Escape))
                 Close();
 
-            // full screen toggle
             if (KB.IsKeyDown(Keys.F11) && !F11Pressed)
             {
                 WindowState = WindowState == WindowState.Fullscreen ? WindowState.Normal : WindowState.Fullscreen;
@@ -106,7 +110,6 @@ namespace PrimitiveShapeBuilder
             }
             else if (KB.IsKeyReleased(Keys.F11) && F11Pressed) F11Pressed = false;
 
-            // toggle cursor state
             if (KB.IsKeyDown(Keys.Tab) && !TabPressed)
             {
                 CursorState = CursorState == CursorState.Grabbed ? CursorState.Normal : CursorState.Grabbed;
@@ -114,7 +117,6 @@ namespace PrimitiveShapeBuilder
             }
             else if (KB.IsKeyReleased(Keys.Tab) && TabPressed) TabPressed = false;
 
-            // toggle UI
             if (KB.IsKeyDown(Keys.F1) && !F1Pressed)
             {
                 ShowUI = !ShowUI;
@@ -123,7 +125,6 @@ namespace PrimitiveShapeBuilder
             else if (KB.IsKeyReleased(Keys.F1) && F1Pressed) F1Pressed = false;
 
 
-            // create object view object placement
             if (MS.IsButtonDown(MouseButton.Right) && !RightClickPressed)
             {
                 RightClickPressed = true;
@@ -137,7 +138,6 @@ namespace PrimitiveShapeBuilder
 
 
 
-            // shape type switching
             if (KB.IsKeyDown(Keys.LeftControl) || KB.IsKeyDown(Keys.RightControl))
             {
                 if (MS.ScrollDelta.Y < 0)
@@ -152,10 +152,9 @@ namespace PrimitiveShapeBuilder
                 else if (MS.ScrollDelta.Y > 0)
                     currentShapeType = currentShapeType.Decrement();
             }
-            //Title = currentShapeType.ToString() + "  " + currentColorType.ToString();
 
 
-            // camera position
+
             float speed = 5.0f;
 
             if (KB.IsKeyDown(Keys.W))
@@ -171,7 +170,6 @@ namespace PrimitiveShapeBuilder
             if (KB.IsKeyDown(Keys.LeftShift))
                 Camera.Position += new Vector3(0.0f, -1.0f, 0.0f) * (float)DT * speed;
 
-            // camera rotation
             if (CursorState == CursorState.Grabbed)
                 Camera.Rotation += new Vector3(-MS.Delta.Y, -MS.Delta.X, 0.0f) * 0.1f;
         }
@@ -204,7 +202,6 @@ namespace PrimitiveShapeBuilder
             shapes.Add(newShape);
         }
 
-        // needed because apcsp requires a method with specific stuff
         private void RenderAllShapes(List<RenderableGameObject> shapesList)
         {
             foreach (RenderableGameObject shape in shapesList)

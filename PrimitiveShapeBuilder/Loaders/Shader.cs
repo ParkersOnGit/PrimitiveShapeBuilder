@@ -10,36 +10,29 @@ namespace PrimitiveShapeBuilder.Loaders
 
         public Shader(string vertexPath, string fragmentPath)
         {
-            // get the source code as a string array
             string vertexShaderSource = File.ReadAllText(vertexPath);
             string fragmentShaderSource = File.ReadAllText(fragmentPath);
 
-            // generate shaders and bind source code
             int vertexShader = GL.CreateShader(ShaderType.VertexShader);
             GL.ShaderSource(vertexShader, vertexShaderSource);
             int fragementShader = GL.CreateShader(ShaderType.FragmentShader);
             GL.ShaderSource(fragementShader, fragmentShaderSource);
 
-            // compile shaders and check for errors
             Compile(vertexShader);
             Compile(fragementShader);
 
-            // next create a program and link the shaders to it
             Handle = GL.CreateProgram();
 
             GL.AttachShader(Handle, vertexShader);
             GL.AttachShader(Handle, fragementShader);
 
-            // check if program has a linking error
             Link();
 
-            // detach and delete shaders
             GL.DetachShader(Handle, vertexShader);
             GL.DetachShader(Handle, fragementShader);
             GL.DeleteShader(vertexShader);
             GL.DeleteShader(fragementShader);
 
-            // get uniform locations
             GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out int count);
             for (int i = 0; i < count; i++)
             {
@@ -75,11 +68,6 @@ namespace PrimitiveShapeBuilder.Loaders
                 string log = GL.GetProgramInfoLog(Handle);
                 Console.WriteLine(log);
             }
-        }
-
-        public int GetAttribLocation(string attribName)
-        {
-            return GL.GetAttribLocation(Handle, attribName);
         }
 
         public void SetInt(string name, int data)

@@ -60,7 +60,6 @@ namespace PrimitiveShapeBuilder
             }
         }
 
-        // still dont really understand the whole generic T value and all that but it works!
         internal static T Increment<T>(this T enumType) where T : Enum
         {
             return (T)Enum.ToObject(typeof(T), (Convert.ToInt32(enumType) + 1) % Enum.GetValues(typeof(T)).Length);
