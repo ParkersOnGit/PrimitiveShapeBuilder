@@ -13,9 +13,9 @@ namespace PrimitiveShapeBuilder.GameObjects.Base
         internal Shader shader;
         private Model model;
 
-        protected string vertexShaderPath;
-        protected string fragmentShaderPath;
-        protected string modelPath;
+        internal string vertexShaderPath;
+        internal string fragmentShaderPath;
+        internal string modelPath;
         protected Matrix4 modelMatrix;
 
         internal Vector3 Color;

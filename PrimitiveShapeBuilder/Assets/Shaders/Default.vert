@@ -16,6 +16,6 @@ void main()
 {
 	gl_Position = vec4(aPos, 1.0) * model * view * projection;
 	UV = aText;
-	Normal = aNorm;
+	Normal = vec3(vec4(aNorm, 0.0) * model);
 	FragPos = vec3(vec4(aPos, 1.0) * model);
 }

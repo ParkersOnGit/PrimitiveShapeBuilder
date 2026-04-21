@@ -40,23 +40,15 @@ namespace PrimitiveShapeBuilder
             gridPlane.Initialize();
             gridPlane.Scale = new Vector3(10.0f, 0.0f, 10.0f);
 
-            UIObject.Rotation = new Vector3(0.0f, 45.0f, 0.0f);
+            UIObject = currentShapeType.ToShapeObject();
+            UIObject.Rotation = new Vector3(25.0f, 45.0f, 180.0f);
             UIObject.Position = new Vector3(100f, ClientSize.Y - 100f, 0f);
             UIObject.Scale = new Vector3(50.0f);
+            UIObject.fragmentShaderPath = "../../../Assets/Shaders/FlatStyle.frag";
             UIObject.Initialize();
 
             CursorState = CursorState.Grabbed;
             IsVisible = true;
-
-            // yes i know in the commit message it says got rid of all comments but i plan on adding this to the scene manager later
-            //for (int y = 0; y <= (int)Enum.GetValues(typeof(ShapeType)).Cast<ShapeType>().Max(); y++)
-            //{
-            //    for (int x = 0; x <= (int)Enum.GetValues(typeof(ColorType)).Cast<ColorType>().Max(); x++)
-            //    {
-            //        Camera.Position = new Vector3(x * 5, 2, y * 5);
-            //        CreateShape((ShapeType)y, (ColorType)x);
-            //    }
-            //}
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -73,18 +65,9 @@ namespace PrimitiveShapeBuilder
                 gridPlane.Position = new Vector3(Camera.Position.X, 0.0f, Camera.Position.Z);
                 gridPlane.Render(Camera.View, Projection);
 
-
-
                 UIObject.Rotation += new Vector3(0, 25 * (float)e.Time, 0);
-                Matrix4 uiProjection = Matrix4.CreateOrthographicOffCenter(
-                    0, ClientSize.X,
-                    ClientSize.Y, 0,
-                    -100f, 100f
-                );
-
-
+                Matrix4 uiProjection = Matrix4.CreateOrthographicOffCenter(0, ClientSize.X, ClientSize.Y, 0, -100f, 100f);
                 GL.Clear(ClearBufferMask.DepthBufferBit);
-                UIObject.shader.SetVector3("lightPos", new Vector3(0f, 0f, 100f));
                 UIObject.shader.SetVector3("objectColor", currentColorType.ToColor());
                 UIObject.Render(Matrix4.Identity, uiProjection);
             }
@@ -152,7 +135,15 @@ namespace PrimitiveShapeBuilder
                 else if (MS.ScrollDelta.Y > 0)
                     currentShapeType = currentShapeType.Decrement();
             }
-
+            if (MS.ScrollDelta.Y != 0 && !(KB.IsKeyDown(Keys.LeftControl) || KB.IsKeyDown(Keys.RightControl)))
+            {
+                UIObject = currentShapeType.ToShapeObject();
+                UIObject.Rotation = new Vector3(25.0f, 45.0f, 180.0f);
+                UIObject.Position = new Vector3(100f, ClientSize.Y - 100f, 0f);
+                UIObject.Scale = new Vector3(50.0f);
+                UIObject.fragmentShaderPath = "../../../Assets/Shaders/FlatStyle.frag";
+                UIObject.Initialize();
+            }
 
 
             float speed = 5.0f;
@@ -184,6 +175,7 @@ namespace PrimitiveShapeBuilder
         {
             GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
             Projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90), ClientSize.X / (float)ClientSize.Y, 0.001f, 100.0f);
+            UIObject.Position = new Vector3(100f, ClientSize.Y - 100f, 0f);
         }
 
         private void CreateShape(ShapeType shapeType, ColorType colorType)
@@ -210,6 +202,18 @@ namespace PrimitiveShapeBuilder
                 shape.shader.SetVector3("lightPos", Camera.Position);
                 shape.shader.SetVector3("objectColor", shape.Color);
                 shape.Render(Camera.View, Projection);
+            }
+        }
+
+        private void SpawnAllObjectsColors()
+        {
+            for (int y = 0; y <= (int)Enum.GetValues(typeof(ShapeType)).Cast<ShapeType>().Max(); y++)
+            {
+                for (int x = 0; x <= (int)Enum.GetValues(typeof(ColorType)).Cast<ColorType>().Max(); x++)
+                {
+                    Camera.Position = new Vector3(x * 3, 2, y * 3);
+                    CreateShape((ShapeType)y, (ColorType)x);
+                }
             }
         }
     }
