@@ -1,10 +1,14 @@
-# PrimitiveShapeBuilder
+<h1 align="center">
+  <span>Primitive Shape Builder</span>
+  <br>
+  <img alt="Primitive Shape Builder Logo" src="PrimitiveShapeBuilder/Assets/Images/PSB Logo.png" width="120">
+</h1>
 
 > ## What is Primitive Shape Builder?
 > 
-> Primitive Shape Builder is an OpenTK project that allows users to spawn shapes in a 3D sandbox, rotate and color them *(WIP)*, and then save the scene to files *(WIP)*.
->
->  *Everything is subject to change as it is in a pre-alpha state.*
+> Primitive Shape Builder is an OpenTK 3D scene editor that allows users to spawn shapes, color them, rotate and scale them, and save the scene to a file <sub>*(WIP)*</sub>. This project was designed as part of the AP Computer Science Principles (APCSP) course.
+> 
+>  <sub>*Everything is subject to change as it is in a pre-alpha state.*</sub>
 
 > ## Controls
 >
@@ -28,22 +32,9 @@
 > ## Objects and Colors
 >
 > ### Objects:
-> - **Cube**,
-> - **Sphere**,
-> - **Square Pyramid**,
-> - **Cone**,
-> - **Cylinder**,
-> - **Triangular Prism**
+> - **Cube, Sphere, Square Pyramid, Cone, Cylinder, Triangular Prism**
 >
 > ### Colors:
-> - **Red**,
-> - **Orange**,
-> - **Yellow**,
-> - **Green**,
-> - **Blue**,
-> - **Purple**,
-> - **White**,
-> - **Gray**,
-> - **Black**
+> - **Red, Orange, Yellow, Green, Blue, Purple, White, Gray, Black**
 >
->  *More objects and colors will be added in later updates.*
+>  <sub>*More objects and colors will be added in later updates.*</sub>
