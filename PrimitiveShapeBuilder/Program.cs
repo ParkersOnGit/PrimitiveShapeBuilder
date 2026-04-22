@@ -7,16 +7,14 @@ namespace PrimitiveShapeBuilder
 {
     internal class Program
     {
-        internal const string VersionNumber = $"v0.1.0-alpha";
+        internal const string VersionNumber = $"v0.2.0-beta";
 
         internal static void Main(string[] args)
         {
-
-
             NativeWindowSettings nativeWindowSettings = new NativeWindowSettings()
             {
                 Size = new Vector2i(16 * 100, 9 * 100),
-                Title = "Primitive Shape Builder",
+                Title = "Primitive Shape Builder (" + VersionNumber + ")",
                 StartVisible = false,
                 Vsync = VSyncMode.On,
                 Icon = new WindowIcon()

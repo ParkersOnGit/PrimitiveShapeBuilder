@@ -118,9 +118,6 @@ namespace PrimitiveShapeBuilder
                 RightClickPressed = false;
             }
 
-
-
-
             if (KB.IsKeyDown(Keys.LeftControl) || KB.IsKeyDown(Keys.RightControl))
             {
                 if (MS.ScrollDelta.Y < 0)
@@ -144,7 +141,6 @@ namespace PrimitiveShapeBuilder
                 UIObject.fragmentShaderPath = "../../../Assets/Shaders/FlatStyle.frag";
                 UIObject.Initialize();
             }
-
 
             float speed = 5.0f;
 
