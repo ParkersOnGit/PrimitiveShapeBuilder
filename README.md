@@ -4,9 +4,12 @@
   <img alt="Primitive Shape Builder Logo" src="PrimitiveShapeBuilder/Assets/Images/LowDetailLogo.png" width="120">
 </h1>
 
+> [!NOTE] 
+> This project is no longer being maintained!
+
 > ## What is Primitive Shape Builder?
-> 
-> Primitive Shape Builder is an OpenTK 3D scene editor that allows users to spawn shapes, color them, rotate and scale them <sub>*(WIP)*</sub>, and save the scene to a file <sub>*(WIP)*</sub>. This project was designed as part of the AP Computer Science Principles (APCSP) course.
+>
+> Primitive Shape Builder is an OpenTK 3D scene editor that allows users to spawn shapes, color them, rotate and scale them <sub>*(WIP)*</sub>, and save the scene to a file <sub>*(WIP)*</sub>.
 >
 >  <img alt="Simple Smile Being Built" src="PrimitiveShapeBuilder/Assets/Images/SmileShape.gif" width="320">
 >
